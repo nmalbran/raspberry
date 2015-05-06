@@ -1,7 +1,7 @@
 
 import time
 import sys
-from common import Led
+from common import Led, get_cli_float
 
 
 def blink(delta=1, channel=2):
@@ -18,12 +18,7 @@ def blink(delta=1, channel=2):
 
 
 if __name__ == '__main__':
-	d = 1
-	try:
-		d = float(sys.argv[1])
-	except Exception as e:
-		pass
-	
-	blink(delta=d)
+	delta = get_cli_float(1, 1.0)
+	blink(delta)
 
 

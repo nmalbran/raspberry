@@ -1,3 +1,4 @@
+import sys
 import RPi.GPIO
 
 RPi.GPIO.setmode(RPi.GPIO.BCM)
@@ -15,3 +16,12 @@ class Led(object):
 
     def off(self):
         RPi.GPIO.output(self.channel, False)
+
+
+def get_cli_float(argn=1, default=1.0):
+    try:
+        return float(sys.argv[argn])
+    except (IndexError, ValueError) as e:
+        return float(default)
+
+
