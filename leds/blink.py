@@ -4,7 +4,7 @@ import sys
 from common import Led
 
 
-def flash(delta=1, channel=2):
+def blink(delta=1, channel=2):
 	led = Led(channel)
 	while True:
 		try:
@@ -24,6 +24,6 @@ if __name__ == '__main__':
 	except Exception as e:
 		pass
 	
-	flash(delta=d)
+	blink(delta=d)
 
 
