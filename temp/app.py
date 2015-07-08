@@ -1,30 +1,46 @@
+from datetime import datetime
 from flask import Flask
+from flask_restful import Resource, Api
 from db import Weather
-import Adafruit_DHT
+from weather import get_weather
 
 app = Flask(__name__)
-
-@app.route("/")
-def index():
-    msg = 'Try again :('
-    humidity, temperature = _get_data()
-    if humidity is not None and temperature is not None:
-        msg = 'Temp={0:0.1f}*C  Humidity={1:0.1f}%\n'.format(temperature, humidity)
-    return msg
-
-@app.route("/last")
-def last():
-    temps = Weather.select().order_by(Weather.timestamp.desc()).limit(100)
-    msg = ''
-    for w in temps:
-        msg += '{0} <br>\n'.format(w)
-    return msg
+api = Api(app)
 
 
-def _get_data(pin=4, sensor=Adafruit_DHT.DHT11):
-    humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
-    return humidity, temperature
+class CurrentWeather(Resource):
+    def get(self):
+        humidity, temperature = get_weather()
+        data = {'data': {'temperature': '', 'humidity': ''}}
+        if humidity is not None:
+            data['data']['humidity'] = str(int(humidity))
+        if temperature is not None:
+            data['data']['temperature'] = str(int(temperature))
+        data['data']['timestamp'] = datetime.strftime(datetime.now(), '%Y-%m-%dT%H:%M:%S')
 
+        return data
+
+class PastDayWeather(Resource):
+    def get(self):
+        temps = Weather.get_days_stats(1, 60)
+        data = {
+            'meta': {'rows': len(temps['avg'])},
+            'data': temps,
+        }
+        return data
+
+class PastWeekWeather(Resource):
+    def get(self):
+        temps = Weather.get_days_stats(7, 360)
+        data = {
+            'meta': {'rows': len(temps['avg'])},
+            'data': temps,
+        }
+        return data
+
+api.add_resource(CurrentWeather, '/cur')
+api.add_resource(PastDayWeather, '/day')
+api.add_resource(PastWeekWeather, '/week')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)

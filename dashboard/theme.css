@@ -1,0 +1,7 @@
+body {
+  padding-top: 70px;
+  padding-bottom: 30px;
+}
+#dayGraph {
+  max-height: 500px;
+}
