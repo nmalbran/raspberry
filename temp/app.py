@@ -31,16 +31,27 @@ class PastDayWeather(Resource):
 
 class PastWeekWeather(Resource):
     def get(self):
-        temps = Weather.get_days_stats(7, 360)
+        temps = Weather.get_days_stats(7, 1440)
         data = {
             'meta': {'rows': len(temps['avg'])},
             'data': temps,
         }
         return data
 
+class PastMonthWeather(Resource):
+    def get(self):
+        temps = Weather.get_days_stats(30, 2880)
+        data = {
+            'meta': {'rows': len(temps['avg'])},
+            'data': temps,
+        }
+        return data
+
+
 api.add_resource(CurrentWeather, '/cur')
 api.add_resource(PastDayWeather, '/day')
 api.add_resource(PastWeekWeather, '/week')
+api.add_resource(PastMonthWeather, '/month')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)

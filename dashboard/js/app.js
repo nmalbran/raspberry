@@ -30,7 +30,7 @@
 
     app.controller('graphController', ['$http', function($http){
         var options = {
-            animation: true,
+            animation: false,
             showTooltips: false,
             bezierCurve : true,
             responsive: true,
@@ -69,9 +69,14 @@
             });
         };
 
-        var ctx = $("#dayGraph").get(0).getContext("2d");
-        var dayGraph = this.buildGraph(ctx, '/api/day', options);
-       
+        var dayCtx = $("#dayGraph").get(0).getContext("2d");
+        var dayGraph = this.buildGraph(dayCtx, '/api/day', options);
+
+        var weekCtx = $("#weekGraph").get(0).getContext("2d");
+        var weekGraph = this.buildGraph(weekCtx, '/api/week', options);
+
+        var monthCtx = $("#monthGraph").get(0).getContext("2d");
+        var monthGraph = this.buildGraph(monthCtx, '/api/month', options);
     }]);
 
 })();
