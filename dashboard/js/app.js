@@ -4,9 +4,9 @@
 
     app.controller('temperatureController', ['$http', function($http){
         var weatherData = this;
-        weatherData.temperature = 0;
-        weatherData.humidity = 0;
-        weatherData.timestamp = "";
+        weatherData.temperature = "-";
+        weatherData.humidity = "-";
+        weatherData.timestamp = "-";
 
         this.updateTemperature = function(){
             $http.get('/api/cur').success(function(data){
